@@ -1,0 +1,484 @@
+{% extends "base.html" %}
+
+{% block title %}Add Department | AlixTech{% endblock %}
+
+{% block page_heading %}
+Department Management
+{% endblock %}
+
+{% block breadcrumb %}
+Departments / Add Department
+{% endblock %}
+
+{% block content %}
+
+<div class="department-page">
+
+    <!-- PAGE HEADER -->
+    <div class="department-page-header">
+
+        <div>
+            <div class="department-eyebrow">
+                DEPARTMENT MANAGEMENT
+            </div>
+
+            <h1>Add New Department</h1>
+
+            <p>
+                Create a new department and add it to your organization.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('departments') }}"
+            class="department-back-button"
+        >
+            ← Back to Departments
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="department-form-card">
+
+        <div class="department-form-header">
+
+            <div class="department-form-icon">
+                ▦
+            </div>
+
+            <div>
+                <h2>Department Information</h2>
+
+                <p>
+                    Enter the details for the new department.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('add_department') }}"
+        >
+
+            <!-- DEPARTMENT NAME -->
+            <div class="department-form-group">
+
+                <label for="department_name">
+                    Department Name
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="department_name"
+                    name="department_name"
+                    placeholder="e.g. Engineering"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DEPARTMENT HEAD -->
+            <div class="department-form-group">
+
+                <label for="department_head">
+                    Department Head
+                </label>
+
+                <input
+                    type="text"
+                    id="department_head"
+                    name="department_head"
+                    placeholder="e.g. Rahul Sharma"
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            <div class="department-form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Enter department description..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="department-form-group">
+
+                <label for="status">
+                    Status
+                    <span>*</span>
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+            <div class="department-form-actions">
+
+                <a
+                    href="{{ url_for('departments') }}"
+                    class="department-cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="department-save-button"
+                >
+                    + Create Department
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =====================================================
+   DEPARTMENT ADD PAGE
+===================================================== */
+
+.department-page {
+    width: 100%;
+}
+
+.department-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.department-eyebrow {
+    color: #6750e8;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    margin-bottom: 8px;
+}
+
+.department-page-header h1 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.department-page-header p {
+    margin: 8px 0 0;
+
+    color: #8994aa;
+
+    font-size: 13px;
+}
+
+.department-back-button {
+    padding: 12px 17px;
+
+    background: white;
+
+    border: 1px solid #e3e7ee;
+    border-radius: 9px;
+
+    color: #4f5d73;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.department-back-button:hover {
+    border-color: #6750e8;
+    color: #6750e8;
+}
+
+
+/* =====================================================
+   FORM CARD
+===================================================== */
+
+.department-form-card {
+    max-width: 850px;
+
+    background: white;
+
+    border: 1px solid #e6e9ef;
+    border-radius: 15px;
+
+    padding: 28px;
+
+    box-shadow: 0 4px 15px rgba(30, 40, 60, 0.03);
+}
+
+.department-form-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding-bottom: 22px;
+
+    margin-bottom: 25px;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.department-form-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eeeaff;
+
+    color: #6544dc;
+
+    border-radius: 11px;
+
+    font-size: 20px;
+}
+
+.department-form-header h2 {
+    margin: 0;
+
+    color: #263247;
+
+    font-size: 17px;
+}
+
+.department-form-header p {
+    margin: 5px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.department-form-group {
+    margin-bottom: 20px;
+}
+
+.department-form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #344054;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.department-form-group label span {
+    color: #e05252;
+}
+
+.department-form-group input,
+.department-form-group textarea,
+.department-form-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    background: #fff;
+
+    border: 1px solid #dfe4eb;
+
+    border-radius: 8px;
+
+    color: #263247;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.department-form-group input {
+    height: 45px;
+}
+
+.department-form-group textarea {
+    resize: vertical;
+
+    min-height: 100px;
+}
+
+.department-form-group select {
+    height: 45px;
+
+    cursor: pointer;
+}
+
+.department-form-group input:focus,
+.department-form-group textarea:focus,
+.department-form-group select:focus {
+    border-color: #6750e8;
+
+    box-shadow: 0 0 0 3px rgba(103, 80, 232, 0.08);
+}
+
+.department-form-group input::placeholder,
+.department-form-group textarea::placeholder {
+    color: #a5adbb;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.department-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    padding-top: 20px;
+
+    margin-top: 10px;
+
+    border-top: 1px solid #edf0f4;
+}
+
+.department-cancel-button {
+    padding: 12px 20px;
+
+    background: white;
+
+    border: 1px solid #dfe4eb;
+
+    border-radius: 8px;
+
+    color: #5e697c;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.department-cancel-button:hover {
+    background: #f7f8fa;
+}
+
+.department-save-button {
+    padding: 12px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: linear-gradient(
+        135deg,
+        #7355f4,
+        #6540df
+    );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 6px 15px rgba(103, 80, 232, 0.18);
+}
+
+.department-save-button:hover {
+    opacity: 0.94;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:700px) {
+
+    .department-page-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .department-form-card {
+        padding: 20px;
+    }
+
+    .department-form-actions {
+        flex-direction: column;
+    }
+
+    .department-cancel-button,
+    .department-save-button {
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+</style>
+
+{% endblock %}

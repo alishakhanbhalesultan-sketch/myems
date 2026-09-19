@@ -1,0 +1,548 @@
+{% extends "base.html" %}
+
+{% block title %}Add Employee | AlixTech{% endblock %}
+
+{% block page_heading %}
+Add Employee
+{% endblock %}
+
+{% block breadcrumb %}
+Employee Management / Add Employee
+{% endblock %}
+
+{% block content %}
+
+<div class="add-employee-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="add-employee-header">
+
+        <div>
+
+            <div class="add-employee-eyebrow">
+                EMPLOYEE MANAGEMENT
+            </div>
+
+            <h2>
+                Add New Employee
+            </h2>
+
+            <p>
+                Create a new employee record in your organization.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="add-employee-card">
+
+        <form
+            method="POST"
+            action="{{ url_for('add_employee') }}"
+        >
+
+
+            <!-- PERSONAL INFORMATION -->
+
+            <div class="form-section">
+
+                <div class="form-section-heading">
+
+                    <div class="form-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Personal Information
+                        </h3>
+
+                        <p>
+                            Enter the employee's basic information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Employee ID -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee ID
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="employee_id"
+                            placeholder="e.g. EMP104"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Name -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Enter full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Email -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Email Address
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="employee@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Phone -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            placeholder="Enter phone number"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMPLOYMENT INFORMATION -->
+
+            <div class="form-section">
+
+                <div class="form-section-heading">
+
+                    <div class="form-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Employment Information
+                        </h3>
+
+                        <p>
+                            Enter the employee's role and organization details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <!-- Department -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                            <span>*</span>
+                        </label>
+
+                        <select
+                            name="department"
+                            required
+                        >
+
+                            <option value="">
+                                Select Department
+                            </option>
+
+                            {% for department in departments %}
+
+                            <option
+                                value="{{ department.department_name }}"
+                            >
+                                {{ department.department_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Position -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Position
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="position"
+                            placeholder="e.g. Software Engineer"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Joining Date -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Joining Date
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            name="joining_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                            <span>*</span>
+                        </label>
+
+                        <select
+                            name="status"
+                            required
+                        >
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="On Leave">
+                                On Leave
+                            </option>
+
+                            <option value="Inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('employees') }}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    <span>✓</span>
+                    Save Employee
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =========================================================
+   ADD EMPLOYEE
+========================================================= */
+
+.add-employee-page {
+    width: 100%;
+}
+
+.add-employee-header {
+    margin-bottom: 25px;
+}
+
+.add-employee-eyebrow {
+    color: #6750e8;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 7px;
+}
+
+.add-employee-header h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 28px;
+}
+
+.add-employee-header p {
+    margin: 7px 0 0;
+    color: #8994aa;
+    font-size: 13px;
+}
+
+
+/* FORM CARD */
+
+.add-employee-card {
+    background: white;
+    border: 1px solid #e7eaf0;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+
+/* SECTION */
+
+.form-section {
+    padding: 28px 30px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 25px;
+}
+
+.form-number {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #eeeaff;
+    color: #6544dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.form-section-heading h3 {
+    margin: 0;
+    color: #172033;
+    font-size: 16px;
+}
+
+.form-section-heading p {
+    margin: 4px 0 0;
+    color: #9aa5b7;
+    font-size: 11px;
+}
+
+
+/* FORM GRID */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+
+/* FORM GROUP */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 7px;
+    color: #344054;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.form-group label span {
+    color: #e05252;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 45px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #344054;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    transition: 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #a5afbd;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #7050e9;
+    box-shadow: 0 0 0 3px rgba(112,80,233,0.08);
+}
+
+
+/* ACTIONS */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+
+    padding: 22px 30px;
+
+    background: #fafbfc;
+}
+
+.cancel-button {
+    height: 44px;
+    padding: 0 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dfe4eb;
+    border-radius: 8px;
+
+    background: white;
+
+    color: #667085;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.save-button {
+    height: 44px;
+    padding: 0 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: linear-gradient(
+        135deg,
+        #7355f4,
+        #6540df
+    );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.save-button span {
+    font-size: 14px;
+}
+
+
+@media(max-width:700px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-section {
+        padding: 22px 18px;
+    }
+
+    .form-actions {
+        padding: 18px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

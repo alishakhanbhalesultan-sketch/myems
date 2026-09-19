@@ -1,0 +1,754 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance | AlixTech{% endblock %}
+
+{% block page_heading %}Attendance{% endblock %}
+
+{% block breadcrumb %}Attendance Management{% endblock %}
+
+{% block content %}
+
+<div class="attendance-page">
+
+    <!-- Header -->
+    <div class="attendance-header">
+
+        <div>
+            <div class="attendance-eyebrow">
+                ATTENDANCE MANAGEMENT
+            </div>
+
+            <h2>Daily Attendance</h2>
+
+            <p>
+                Track and manage employee attendance for today.
+            </p>
+        </div>
+
+        <div class="attendance-date">
+            Today's Attendance
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="attendance-stats">
+
+        <div class="attendance-card">
+            <span>Total Employees</span>
+            <strong>{{ total_employees }}</strong>
+        </div>
+
+        <div class="attendance-card present">
+            <span>Present Today</span>
+            <strong>{{ present_today }}</strong>
+        </div>
+
+        <div class="attendance-card absent">
+            <span>Absent Today</span>
+            <strong>{{ absent_today }}</strong>
+        </div>
+
+        <div class="attendance-card leave">
+            <span>On Leave</span>
+            <strong>{{ on_leave }}</strong>
+        </div>
+
+        <div class="attendance-card percentage">
+            <span>Attendance</span>
+            <strong>{{ attendance_percentage }}%</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Attendance Table -->
+    <div class="attendance-table-card">
+
+        <div class="attendance-table-header">
+
+            <div>
+                <h3>Today's Attendance</h3>
+
+                <p>
+                    Mark employee attendance and manage check-in/check-out.
+                </p>
+            </div>
+
+            <input
+                type="text"
+                id="attendanceSearch"
+                placeholder="Search employee..."
+            >
+
+        </div>
+
+
+        <div class="attendance-table-wrapper">
+
+            <table class="attendance-table">
+
+                <thead>
+                    <tr>
+                        <th>EMPLOYEE</th>
+                        <th>ID</th>
+                        <th>DEPARTMENT</th>
+                        <th>CHECK IN</th>
+                        <th>CHECK OUT</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+
+                <tbody id="attendanceBody">
+
+                {% for employee in attendance %}
+
+                    <tr>
+
+                        <!-- Employee -->
+
+                        <td>
+
+                            <div class="attendance-employee">
+
+                                <div class="attendance-avatar">
+                                    {{ employee.name[0]|upper }}
+                                </div>
+
+                                <strong>
+                                    {{ employee.name }}
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Employee ID -->
+
+                        <td>
+                            {{ employee.employee_id }}
+                        </td>
+
+
+                        <!-- Department -->
+
+                        <td>
+                            {{ employee.department or "-" }}
+                        </td>
+
+
+                        <!-- Check In -->
+
+                        <td>
+                            {{ employee.check_in or "-" }}
+                        </td>
+
+
+                        <!-- Check Out -->
+
+                        <td>
+                            {{ employee.check_out or "-" }}
+                        </td>
+
+
+                        <!-- Status -->
+
+                        <td>
+
+                            {% if employee.status == "Present" %}
+
+                                <span class="attendance-status present">
+                                    Present
+                                </span>
+
+                            {% elif employee.status == "Absent" %}
+
+                                <span class="attendance-status absent">
+                                    Absent
+                                </span>
+
+                            {% elif employee.status == "On Leave" %}
+
+                                <span class="attendance-status leave">
+                                    On Leave
+                                </span>
+
+                            {% else %}
+
+                                <span class="attendance-status not-marked">
+                                    Not Marked
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Actions -->
+
+                        <td>
+
+                            <div class="attendance-actions">
+
+                                {% if employee.status != "Present" %}
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('mark_attendance', employee_id=employee.employee_id) }}"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="mark-present"
+                                        >
+                                            Present
+                                        </button>
+
+                                    </form>
+
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('mark_absent', employee_id=employee.employee_id) }}"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="mark-absent"
+                                        >
+                                            Absent
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    {% if not employee.check_out %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('checkout', employee_id=employee.employee_id) }}"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="check-out"
+                                            >
+                                                Check Out
+                                            </button>
+
+                                        </form>
+
+                                    {% else %}
+
+                                        <span class="completed">
+                                            Completed
+                                        </span>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty-attendance"
+                        >
+                            No employees found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* ===============================
+   PAGE
+================================ */
+
+.attendance-page {
+    width: 100%;
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.attendance-eyebrow {
+    color: #6750e8;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 7px;
+}
+
+.attendance-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 28px;
+}
+
+.attendance-header p {
+    margin: 7px 0 0;
+
+    color: #8994aa;
+
+    font-size: 13px;
+}
+
+.attendance-date {
+    background: white;
+
+    border: 1px solid #e4e8ef;
+
+    border-radius: 9px;
+
+    padding: 11px 18px;
+
+    color: #596579;
+
+    font-size: 12px;
+}
+
+
+/* ===============================
+   STATISTICS
+================================ */
+
+.attendance-stats {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+.attendance-card {
+    background: white;
+
+    border: 1px solid #e6e9ef;
+
+    border-radius: 13px;
+
+    padding: 20px;
+}
+
+.attendance-card span {
+    display: block;
+
+    color: #8994aa;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 8px;
+}
+
+.attendance-card strong {
+    font-size: 27px;
+
+    color: #172033;
+}
+
+.attendance-card.present strong {
+    color: #0b9d68;
+}
+
+.attendance-card.absent strong {
+    color: #df5555;
+}
+
+.attendance-card.leave strong {
+    color: #df9419;
+}
+
+.attendance-card.percentage strong {
+    color: #6750e8;
+}
+
+
+/* ===============================
+   TABLE CARD
+================================ */
+
+.attendance-table-card {
+    background: white;
+
+    border: 1px solid #e6e9ef;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.attendance-table-header {
+    padding: 20px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.attendance-table-header h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 16px;
+}
+
+.attendance-table-header p {
+    margin: 5px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+.attendance-table-header input {
+    width: 220px;
+
+    height: 40px;
+
+    border: 1px solid #dfe4eb;
+
+    border-radius: 8px;
+
+    padding: 0 12px;
+
+    outline: none;
+
+    font-size: 12px;
+}
+
+
+/* ===============================
+   TABLE
+================================ */
+
+.attendance-table-wrapper {
+    overflow-x: auto;
+}
+
+.attendance-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 850px;
+}
+
+.attendance-table th {
+    background: #fafbfc;
+
+    color: #8994aa;
+
+    padding: 14px;
+
+    text-align: left;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.attendance-table td {
+    padding: 14px;
+
+    border-top: 1px solid #f0f2f5;
+
+    color: #4d596c;
+
+    font-size: 11px;
+
+    vertical-align: middle;
+}
+
+.attendance-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+/* ===============================
+   EMPLOYEE
+================================ */
+
+.attendance-employee {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.attendance-avatar {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    background: #eeeaff;
+
+    color: #6544dc;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+
+/* ===============================
+   STATUS
+================================ */
+
+.attendance-status {
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.attendance-status.present {
+    background: #e8faf2;
+
+    color: #07865a;
+}
+
+.attendance-status.absent {
+    background: #fff0f0;
+
+    color: #d04444;
+}
+
+.attendance-status.leave {
+    background: #fff4dd;
+
+    color: #d58b0d;
+}
+
+.attendance-status.not-marked {
+    background: #f1f3f6;
+
+    color: #7d8797;
+}
+
+
+/* ===============================
+   ACTIONS
+================================ */
+
+.attendance-actions {
+    display: flex;
+
+    gap: 5px;
+
+    align-items: center;
+}
+
+.attendance-actions form {
+    margin: 0;
+}
+
+.attendance-actions button {
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 7px 9px;
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+.mark-present {
+    background: #e8faf2;
+
+    color: #07865a;
+}
+
+.mark-present:hover {
+    background: #d4f6e7;
+}
+
+.mark-absent {
+    background: #fff0f0;
+
+    color: #d04444;
+}
+
+.mark-absent:hover {
+    background: #ffe0e0;
+}
+
+.check-out {
+    background: #eeeaff;
+
+    color: #6544dc;
+}
+
+.check-out:hover {
+    background: #e2ddff;
+}
+
+.completed {
+    background: #f1f3f6;
+
+    color: #7d8797;
+
+    padding: 7px 9px;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+}
+
+
+/* ===============================
+   EMPTY
+================================ */
+
+.empty-attendance {
+    text-align: center;
+
+    padding: 40px !important;
+
+    color: #9aa5b7;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:1200px) {
+
+    .attendance-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media(max-width:800px) {
+
+    .attendance-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .attendance-header {
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .attendance-table-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .attendance-table-header input {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+const attendanceSearch =
+    document.getElementById("attendanceSearch");
+
+const attendanceRows =
+    document.querySelectorAll("#attendanceBody tr");
+
+if (attendanceSearch) {
+
+    attendanceSearch.addEventListener(
+        "input",
+        function () {
+
+            const value =
+                this.value.toLowerCase().trim();
+
+            attendanceRows.forEach(
+                function(row) {
+
+                    row.style.display =
+                        row.textContent
+                            .toLowerCase()
+                            .includes(value)
+                            ? ""
+                            : "none";
+
+                }
+            );
+
+        }
+    );
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,877 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AlixTech{% endblock %}
+
+{% block page_heading %}
+Employee Management
+{% endblock %}
+
+{% block breadcrumb %}
+Employee Management
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- PAGE HEADER -->
+    <div class="dashboard-header">
+
+        <div>
+            <div class="dashboard-eyebrow">
+                OVERVIEW
+            </div>
+
+            <h2>
+                Welcome back, Alish
+            </h2>
+
+            <p>
+                Here's what's happening across your employee management system.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('add_employee') }}"
+            class="dashboard-add-button"
+        >
+            <span>+</span>
+            Add Employee
+        </a>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+    <div class="dashboard-stats">
+
+        <!-- TOTAL EMPLOYEES -->
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon purple">
+                👥
+            </div>
+
+            <div>
+                <span>Total Employees</span>
+
+                <strong>
+                    {{ total_employees }}
+                </strong>
+
+                <small>
+                    Employees registered in the system
+                </small>
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE EMPLOYEES -->
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon green">
+                ✓
+            </div>
+
+            <div>
+                <span>Active Employees</span>
+
+                <strong>
+                    {{ active_employees }}
+                </strong>
+
+                <small>
+                    Currently active employees
+                </small>
+            </div>
+
+        </div>
+
+
+        <!-- ON LEAVE -->
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon orange">
+                ◷
+            </div>
+
+            <div>
+                <span>On Leave</span>
+
+                <strong>
+                    {{ employees_on_leave }}
+                </strong>
+
+                <small>
+                    Employees currently on leave
+                </small>
+            </div>
+
+        </div>
+
+
+        <!-- DEPARTMENTS -->
+        <div class="dashboard-stat-card">
+
+            <div class="dashboard-stat-icon purple">
+                ▣
+            </div>
+
+            <div>
+                <span>Departments</span>
+
+                <strong>
+                    {{ total_departments }}
+                </strong>
+
+                <small>
+                    Departments across the organization
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOWER SECTION -->
+    <div class="dashboard-grid">
+
+
+        <!-- RECENT EMPLOYEES -->
+        <div class="dashboard-panel">
+
+            <div class="dashboard-panel-header">
+
+                <div>
+                    <h3>
+                        Recent Employees
+                    </h3>
+
+                    <p>
+                        Latest employee records
+                    </p>
+                </div>
+
+                <a
+                    href="{{ url_for('employees') }}"
+                    class="view-all-link"
+                >
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="recent-employees">
+
+                {% for employee in recent_employees %}
+
+                <div class="recent-employee">
+
+                    <div class="recent-avatar">
+                        {{ employee.name[0]|upper }}
+                    </div>
+
+                    <div class="recent-info">
+
+                        <strong>
+                            {{ employee.name }}
+                        </strong>
+
+                        <span>
+                            {{ employee.position or "Employee" }}
+                        </span>
+
+                    </div>
+
+
+                    {% if employee.status == "Active" %}
+
+                    <span class="recent-status active">
+                        Active
+                    </span>
+
+                    {% elif employee.status == "On Leave" %}
+
+                    <span class="recent-status leave">
+                        On Leave
+                    </span>
+
+                    {% else %}
+
+                    <span class="recent-status inactive">
+                        {{ employee.status }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% else %}
+
+                <div class="dashboard-empty">
+                    No employees available.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <div class="dashboard-panel">
+
+            <div class="dashboard-panel-header">
+
+                <div>
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+                    <p>
+                        Common employee operations
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <!-- ADD EMPLOYEE -->
+                <a
+                    href="{{ url_for('add_employee') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon purple">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>
+                            Add Employee
+                        </strong>
+
+                        <span>
+                            Create employee record
+                        </span>
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+
+
+                <!-- EMPLOYEES -->
+                <a
+                    href="{{ url_for('employees') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon blue">
+                        👥
+                    </div>
+
+                    <div>
+                        <strong>
+                            Employee Directory
+                        </strong>
+
+                        <span>
+                            View all employees
+                        </span>
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+
+
+                <!-- DEPARTMENTS -->
+                <a
+                    href="{{ url_for('departments') }}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon green">
+                        ▣
+                    </div>
+
+                    <div>
+                        <strong>
+                            Departments
+                        </strong>
+
+                        <span>
+                            Manage departments
+                        </span>
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SYSTEM STATUS -->
+    <div class="system-status-card">
+
+        <div class="system-status-left">
+
+            <div class="system-status-icon">
+                ✓
+            </div>
+
+            <div>
+                <h3>
+                    System Status
+                </h3>
+
+                <p>
+                    Employee Management System is running normally.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="system-status-right">
+            <span></span>
+            All systems operational
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-page {
+    width: 100%;
+}
+
+
+/* HEADER */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.dashboard-eyebrow {
+    color: #6750e8;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.dashboard-header p {
+    margin: 8px 0 0;
+    color: #8994aa;
+    font-size: 13px;
+}
+
+.dashboard-add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 20px;
+
+    background: linear-gradient(
+        135deg,
+        #7355f4,
+        #6540df
+    );
+
+    color: white;
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    box-shadow: 0 8px 20px rgba(103,80,232,.18);
+}
+
+.dashboard-add-button span {
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.dashboard-stat-card {
+    background: white;
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+
+    min-height: 125px;
+
+    padding: 20px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.dashboard-stat-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.dashboard-stat-icon.purple {
+    background: #eeeaff;
+    color: #6544dc;
+}
+
+.dashboard-stat-icon.green {
+    background: #e8faf2;
+    color: #0da66d;
+}
+
+.dashboard-stat-icon.orange {
+    background: #fff4dd;
+    color: #e69712;
+}
+
+.dashboard-stat-card > div:last-child {
+    min-width: 0;
+}
+
+.dashboard-stat-card span {
+    display: block;
+
+    color: #8994aa;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: .7px;
+
+    margin-bottom: 7px;
+}
+
+.dashboard-stat-card strong {
+    display: block;
+
+    color: #172033;
+
+    font-size: 28px;
+    line-height: 1;
+
+    margin-bottom: 8px;
+}
+
+.dashboard-stat-card small {
+    color: #9aa5b7;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+
+/* PANEL */
+
+.dashboard-panel {
+    background: white;
+
+    border: 1px solid #e7eaf0;
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+.dashboard-panel-header {
+    min-height: 82px;
+
+    padding: 20px 23px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-panel-header h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 16px;
+}
+
+.dashboard-panel-header p {
+    margin: 5px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+.view-all-link {
+    color: #6750e8;
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   RECENT EMPLOYEES
+========================================================= */
+
+.recent-employees {
+    padding: 0 22px;
+}
+
+.recent-employee {
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.recent-employee:last-child {
+    border-bottom: none;
+}
+
+.recent-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background: #eeeaff;
+
+    color: #6544dc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.recent-info {
+    flex: 1;
+}
+
+.recent-info strong {
+    display: block;
+
+    color: #263247;
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+}
+
+.recent-info span {
+    color: #9aa5b7;
+
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.recent-status {
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.recent-status.active {
+    background: #e9faf3;
+    color: #07865a;
+}
+
+.recent-status.leave {
+    background: #fff4dd;
+    color: #d58b0d;
+}
+
+.recent-status.inactive {
+    background: #fff0f0;
+    color: #d04444;
+}
+
+.dashboard-empty {
+    padding: 35px 0;
+
+    text-align: center;
+
+    color: #9aa5b7;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-actions {
+    padding: 0 22px;
+}
+
+.quick-action {
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    border-bottom: 1px solid #f0f2f5;
+
+    text-decoration: none;
+}
+
+.quick-action:last-child {
+    border-bottom: none;
+}
+
+.quick-action-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.quick-action-icon.purple {
+    background: #eeeaff;
+    color: #6544dc;
+}
+
+.quick-action-icon.blue {
+    background: #edf4ff;
+    color: #5273d8;
+}
+
+.quick-action-icon.green {
+    background: #e8faf2;
+    color: #0da66d;
+}
+
+.quick-action > div:nth-child(2) {
+    flex: 1;
+}
+
+.quick-action strong {
+    display: block;
+
+    color: #263247;
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+}
+
+.quick-action span {
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+.quick-action b {
+    color: #9aa5b7;
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   SYSTEM STATUS
+========================================================= */
+
+.system-status-card {
+    min-height: 82px;
+
+    padding: 18px 22px;
+
+    background: white;
+
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.system-status-left {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.system-status-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 10px;
+
+    background: #e8faf2;
+
+    color: #0da66d;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+.system-status-card h3 {
+    margin: 0;
+
+    color: #263247;
+
+    font-size: 13px;
+}
+
+.system-status-card p {
+    margin: 4px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+.system-status-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #0b9b67;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.system-status-right span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #15bd79;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px) {
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:700px) {
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .system-status-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

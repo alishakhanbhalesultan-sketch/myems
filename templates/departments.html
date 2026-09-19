@@ -1,0 +1,1025 @@
+{% extends "base.html" %}
+
+{% block title %}Departments | AlixTech{% endblock %}
+
+{% block page_heading %}Departments{% endblock %}
+
+{% block breadcrumb %}Department Management{% endblock %}
+
+{% block content %}
+
+<div class="department-page">
+
+    <!-- PAGE HEADER -->
+    <div class="department-header">
+
+        <div>
+            <div class="department-eyebrow">
+                ORGANIZATION
+            </div>
+
+            <h2>
+                Department Management
+            </h2>
+
+            <p>
+                Manage departments, department heads, and employee allocation.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('add_department') }}"
+            class="add-department-btn"
+        >
+            + Add Department
+        </a>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+    <div class="department-stats">
+
+        <div class="department-stat-card">
+
+            <div class="stat-icon purple">
+                ▦
+            </div>
+
+            <div>
+                <span>Total Departments</span>
+                <strong>{{ total_departments }}</strong>
+                <small>Departments registered</small>
+            </div>
+
+        </div>
+
+
+        <div class="department-stat-card">
+
+            <div class="stat-icon green">
+                ✓
+            </div>
+
+            <div>
+                <span>Active Departments</span>
+                <strong>{{ active_departments }}</strong>
+                <small>Currently active</small>
+            </div>
+
+        </div>
+
+
+        <div class="department-stat-card">
+
+            <div class="stat-icon blue">
+                ♟
+            </div>
+
+            <div>
+                <span>Total Employees</span>
+                <strong>{{ total_employees }}</strong>
+                <small>Across all departments</small>
+            </div>
+
+        </div>
+
+
+        <div class="department-stat-card">
+
+            <div class="stat-icon orange">
+                !
+            </div>
+
+            <div>
+                <span>Vacant Heads</span>
+                <strong>{{ vacant_heads }}</strong>
+                <small>Departments without head</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEPARTMENT TABLE -->
+    <div class="department-table-card">
+
+        <div class="department-table-header">
+
+            <div>
+                <h3>
+                    All Departments
+                </h3>
+
+                <p>
+                    Department records and information
+                </p>
+            </div>
+
+
+            <div class="department-search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    id="departmentSearch"
+                    placeholder="Search departments..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="department-table-wrapper">
+
+            <table class="department-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>DEPARTMENT</th>
+
+                        <th>DEPARTMENT HEAD</th>
+
+                        <th>EMPLOYEES</th>
+
+                        <th>DESCRIPTION</th>
+
+                        <th>STATUS</th>
+
+                        <th>ACTIONS</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="departmentBody">
+
+                {% for department in departments %}
+
+                    <tr>
+
+                        <!-- Department -->
+
+                        <td>
+
+                            <div class="department-name">
+
+                                <div class="department-avatar">
+                                    {{ department.department_name[0]|upper }}
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ department.department_name }}
+                                    </strong>
+
+                                    <small>
+                                        Department
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Department Head -->
+
+                        <td>
+
+                            <div class="head-info">
+
+                                <div class="head-avatar">
+
+                                    {% if department.department_head %}
+                                        {{ department.department_head[0]|upper }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </div>
+
+                                <span>
+                                    {{ department.department_head or "Not Assigned" }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Employees -->
+
+                        <td>
+
+                            <span class="employee-count">
+                                {{ department.employee_count }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Description -->
+
+                        <td>
+
+                            <div class="description-text">
+
+                                {{ department.description or "No description available" }}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Status -->
+
+                        <td>
+
+                            {% if department.status == "Active" %}
+
+                                <span class="department-status active">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="department-status inactive">
+                                    {{ department.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Actions -->
+
+                        <td>
+
+                            <div class="department-actions">
+
+                                <button
+                                    type="button"
+                                    class="action-btn view-btn"
+                                    title="View"
+                                >
+                                    ◉
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="action-btn edit-btn"
+                                    title="Edit"
+                                >
+                                    ✎
+                                </button>
+
+
+                                {% if department.employee_count == 0 %}
+
+                                    <a
+                                        href="{{ url_for('delete_department', id=department.id) }}"
+                                        class="action-btn delete-btn"
+                                        title="Delete"
+                                        onclick="return confirm('Delete this department?');"
+                                    >
+                                        🗑
+                                    </a>
+
+                                {% else %}
+
+                                    <button
+                                        type="button"
+                                        class="action-btn delete-disabled"
+                                        title="Cannot delete department with employees"
+                                    >
+                                        🗑
+                                    </button>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-departments"
+                        >
+                            No departments found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =========================================
+   DEPARTMENT PAGE
+========================================= */
+
+.department-page {
+    width: 100%;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.department-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+}
+
+.department-eyebrow {
+    color: #6750e8;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    margin-bottom: 7px;
+}
+
+.department-header h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.department-header p {
+    margin: 7px 0 0;
+    color: #8994aa;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   ADD BUTTON
+========================================= */
+
+.add-department-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #6750e8;
+    color: white;
+
+    padding: 11px 17px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: 0.2s;
+
+    box-shadow: 0 5px 12px rgba(103,80,232,0.15);
+}
+
+.add-department-btn:hover {
+    background: #5740d0;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.department-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+.department-stat-card {
+    background: white;
+
+    border: 1px solid #e6e9ef;
+
+    border-radius: 13px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 110px;
+
+    transition: 0.2s;
+}
+
+.department-stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(20,30,50,0.06);
+}
+
+
+/* STAT ICON */
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 11px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+.stat-icon.purple {
+    background: #eeeaff;
+    color: #6750e8;
+}
+
+.stat-icon.green {
+    background: #e8faf2;
+    color: #07865a;
+}
+
+.stat-icon.blue {
+    background: #e9f2ff;
+    color: #3478d5;
+}
+
+.stat-icon.orange {
+    background: #fff4dd;
+    color: #d58b0d;
+}
+
+
+/* STAT TEXT */
+
+.department-stat-card span {
+    display: block;
+
+    color: #8994aa;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+
+    margin-bottom: 6px;
+}
+
+.department-stat-card strong {
+    display: block;
+
+    color: #172033;
+
+    font-size: 26px;
+
+    line-height: 1;
+
+    margin-bottom: 6px;
+}
+
+.department-stat-card small {
+    color: #a0a9b8;
+
+    font-size: 9px;
+}
+
+
+/* =========================================
+   TABLE CARD
+========================================= */
+
+.department-table-card {
+    background: white;
+
+    border: 1px solid #e6e9ef;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+/* TABLE HEADER */
+
+.department-table-header {
+    padding: 20px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.department-table-header h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 16px;
+}
+
+.department-table-header p {
+    margin: 5px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+
+/* SEARCH */
+
+.department-search {
+    width: 220px;
+
+    height: 39px;
+
+    border: 1px solid #dfe4eb;
+
+    border-radius: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 11px;
+
+    background: white;
+}
+
+.department-search span {
+    color: #8994aa;
+
+    font-size: 17px;
+
+    margin-right: 6px;
+}
+
+.department-search input {
+    width: 100%;
+
+    height: 100%;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 11px;
+
+    color: #4d596c;
+}
+
+.department-search input::placeholder {
+    color: #a5adbb;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.department-table-wrapper {
+    overflow-x: auto;
+}
+
+.department-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 850px;
+}
+
+.department-table th {
+    background: #fafbfc;
+
+    color: #8994aa;
+
+    padding: 14px 16px;
+
+    text-align: left;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+}
+
+.department-table td {
+    padding: 15px 16px;
+
+    border-top: 1px solid #f0f2f5;
+
+    color: #4d596c;
+
+    font-size: 11px;
+
+    vertical-align: middle;
+}
+
+.department-table tbody tr {
+    transition: 0.15s;
+}
+
+.department-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+/* =========================================
+   DEPARTMENT NAME
+========================================= */
+
+.department-name {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 180px;
+}
+
+.department-avatar {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 9px;
+
+    background: #eeeaff;
+
+    color: #6750e8;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+.department-name strong {
+    display: block;
+
+    color: #273248;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.department-name small {
+    display: block;
+
+    color: #a0a9b8;
+
+    font-size: 9px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================================
+   DEPARTMENT HEAD
+========================================= */
+
+.head-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 150px;
+}
+
+.head-avatar {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #e9f2ff;
+
+    color: #3478d5;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.head-info span {
+    font-size: 11px;
+
+    color: #596579;
+}
+
+
+/* =========================================
+   EMPLOYEE COUNT
+========================================= */
+
+.employee-count {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 31px;
+
+    height: 28px;
+
+    padding: 0 8px;
+
+    border-radius: 7px;
+
+    background: #f0edff;
+
+    color: #6750e8;
+
+    font-weight: 700;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.description-text {
+    max-width: 230px;
+
+    color: #687388;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.department-status {
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.department-status.active {
+    background: #e8faf2;
+
+    color: #07865a;
+}
+
+.department-status.inactive {
+    background: #fff0f0;
+
+    color: #d04444;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.department-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+.action-btn {
+    width: 29px;
+    height: 29px;
+
+    border-radius: 7px;
+
+    border: none;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    transition: 0.15s;
+}
+
+.view-btn {
+    background: #eeeaff;
+
+    color: #6750e8;
+}
+
+.view-btn:hover {
+    background: #e0dafe;
+}
+
+.edit-btn {
+    background: #e9f2ff;
+
+    color: #3478d5;
+}
+
+.edit-btn:hover {
+    background: #dceaff;
+}
+
+.delete-btn {
+    background: #fff0f0;
+
+    color: #d04444;
+}
+
+.delete-btn:hover {
+    background: #ffe0e0;
+}
+
+.delete-disabled {
+    background: #f1f3f6;
+
+    color: #b7bec9;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.empty-departments {
+    text-align: center;
+
+    padding: 45px !important;
+
+    color: #9aa5b7 !important;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1200px) {
+
+    .department-stats {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .department-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .department-stats {
+        grid-template-columns:
+            1fr;
+    }
+
+    .department-table-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .department-search {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+const departmentSearch =
+    document.getElementById("departmentSearch");
+
+const departmentRows =
+    document.querySelectorAll("#departmentBody tr");
+
+
+if (departmentSearch) {
+
+    departmentSearch.addEventListener(
+        "input",
+        function () {
+
+            const value =
+                this.value.toLowerCase().trim();
+
+            departmentRows.forEach(
+                function (row) {
+
+                    row.style.display =
+                        row.textContent
+                            .toLowerCase()
+                            .includes(value)
+                            ? ""
+                            : "none";
+
+                }
+            );
+
+        }
+    );
+
+}
+
+</script>
+
+{% endblock %}

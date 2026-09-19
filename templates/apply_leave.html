@@ -1,0 +1,626 @@
+{% extends "base.html" %}
+
+{% block title %}Apply Leave | AlixTech{% endblock %}
+
+{% block page_heading %}Apply Leave{% endblock %}
+
+{% block breadcrumb %}Leave / Apply Leave{% endblock %}
+
+{% block content %}
+
+<div class="apply-leave-page">
+
+    <!-- HEADER -->
+    <div class="apply-header">
+
+        <div>
+            <div class="apply-eyebrow">
+                LEAVE MANAGEMENT
+            </div>
+
+            <h2>Apply for Leave</h2>
+
+            <p>
+                Submit a leave request for an employee.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('leave') }}"
+            class="back-btn"
+        >
+            ← Back to Leave
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="leave-form-card">
+
+        <div class="form-card-header">
+
+            <div class="form-icon">
+                📅
+            </div>
+
+            <div>
+                <h3>Leave Request</h3>
+
+                <p>
+                    Enter the leave details below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('add_leave') }}"
+            class="leave-form"
+        >
+
+            <!-- EMPLOYEE -->
+
+            <div class="form-group full">
+
+                <label>
+                    Employee
+                    <span>*</span>
+                </label>
+
+                <select
+                    name="employee_id"
+                    required
+                >
+
+                    <option value="">
+                        Select employee
+                    </option>
+
+                    {% for employee in employees %}
+
+                        <option value="{{ employee.employee_id }}">
+
+                            {{ employee.name }}
+                            -
+                            {{ employee.employee_id }}
+
+                            {% if employee.department %}
+                                ({{ employee.department }})
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- LEAVE TYPE -->
+
+            <div class="form-group">
+
+                <label>
+                    Leave Type
+                    <span>*</span>
+                </label>
+
+                <select
+                    name="leave_type"
+                    required
+                >
+
+                    <option value="">
+                        Select leave type
+                    </option>
+
+                    <option value="Casual Leave">
+                        Casual Leave
+                    </option>
+
+                    <option value="Sick Leave">
+                        Sick Leave
+                    </option>
+
+                    <option value="Earned Leave">
+                        Earned Leave
+                    </option>
+
+                    <option value="Emergency Leave">
+                        Emergency Leave
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- START DATE -->
+
+            <div class="form-group">
+
+                <label>
+                    Start Date
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="date"
+                    name="start_date"
+                    id="start_date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- END DATE -->
+
+            <div class="form-group">
+
+                <label>
+                    End Date
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="date"
+                    name="end_date"
+                    id="end_date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- REASON -->
+
+            <div class="form-group full">
+
+                <label>
+                    Reason
+                    <span>*</span>
+                </label>
+
+                <textarea
+                    name="reason"
+                    rows="5"
+                    placeholder="Enter reason for leave..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('leave') }}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Submit Leave Request
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+
+/* =========================================
+   PAGE
+========================================= */
+
+.apply-leave-page {
+    width: 100%;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.apply-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 25px;
+}
+
+.apply-eyebrow {
+    color: #6750e8;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 7px;
+}
+
+.apply-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 28px;
+}
+
+.apply-header p {
+    margin: 7px 0 0;
+
+    color: #8994aa;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-btn {
+    text-decoration: none;
+
+    color: #6750e8;
+
+    background: #eeeaff;
+
+    padding: 11px 16px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #e2ddff;
+}
+
+
+/* =========================================
+   FORM CARD
+========================================= */
+
+.leave-form-card {
+    background: white;
+
+    border: 1px solid #e6e9ef;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    max-width: 900px;
+}
+
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.form-card-header {
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.form-icon {
+    width: 43px;
+
+    height: 43px;
+
+    border-radius: 11px;
+
+    background: #eeeaff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 19px;
+}
+
+.form-card-header h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 16px;
+}
+
+.form-card-header p {
+    margin: 5px 0 0;
+
+    color: #9aa5b7;
+
+    font-size: 10px;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.leave-form {
+    padding: 25px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.form-group label {
+    color: #4d596c;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.form-group label span {
+    color: #df5555;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+
+    width: 100%;
+
+    border: 1px solid #dfe4eb;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #3f4a5d;
+
+    font-size: 11px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.form-group input,
+.form-group select {
+    height: 43px;
+
+    padding: 0 12px;
+}
+
+.form-group textarea {
+    padding: 12px;
+
+    resize: vertical;
+
+    min-height: 110px;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+    border-color: #6750e8;
+
+    box-shadow:
+        0 0 0 3px rgba(103,80,232,0.08);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #a8b0bd;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.form-actions {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding-top: 8px;
+
+    border-top: 1px solid #edf0f4;
+
+    margin-top: 5px;
+}
+
+.cancel-btn {
+    text-decoration: none;
+
+    padding: 10px 17px;
+
+    border-radius: 8px;
+
+    background: #f1f3f6;
+
+    color: #687388;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.cancel-btn:hover {
+    background: #e7e9ed;
+}
+
+.submit-btn {
+    border: none;
+
+    padding: 11px 18px;
+
+    border-radius: 8px;
+
+    background: #6750e8;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 12px rgba(103,80,232,0.18);
+
+    transition: 0.2s;
+}
+
+.submit-btn:hover {
+    background: #5740d0;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media(max-width:700px) {
+
+    .apply-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .leave-form {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        grid-column: auto;
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        text-align: center;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+const startDate =
+    document.getElementById("start_date");
+
+const endDate =
+    document.getElementById("end_date");
+
+
+if (startDate && endDate) {
+
+    startDate.addEventListener(
+        "change",
+        function () {
+
+            endDate.min = startDate.value;
+
+            if (
+                endDate.value &&
+                endDate.value < startDate.value
+            ) {
+
+                endDate.value = startDate.value;
+
+            }
+
+        }
+    );
+
+}
+
+</script>
+
+{% endblock %}

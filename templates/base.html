@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}AlixTech{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/theme.css') }}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">A</div>
+
+            <div class="brand-text">
+                <h2>AlixTech</h2>
+                <span>Employee Management</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">▣</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('employees') }}"
+               class="{% if request.endpoint in ['employees', 'add_employee'] %}active{% endif %}">
+                <span class="nav-icon">◉</span>
+                <span>Employees</span>
+            </a>
+
+            <a href="{{ url_for('departments') }}"
+               class="{% if request.endpoint in ['departments', 'add_department'] %}active{% endif %}">
+                <span class="nav-icon">▤</span>
+                <span>Departments</span>
+            </a>
+
+            <a href="{{ url_for('attendance') }}"
+               class="{% if request.endpoint == 'attendance' %}active{% endif %}">
+                <span class="nav-icon">✓</span>
+                <span>Attendance</span>
+            </a>
+
+            <a href="{{ url_for('leave') }}"
+               class="{% if request.endpoint in ['leave', 'apply_leave'] %}active{% endif %}">
+                <span class="nav-icon">▥</span>
+                <span>Leave</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            {% if session.get('user_id') %}
+
+            <div class="user-box">
+
+                <div class="user-avatar">
+                    {{ session.get('user_name', 'A')[0]|upper }}
+                </div>
+
+                <div class="user-info">
+                    <strong>
+                        {{ session.get('user_name', 'Administrator') }}
+                    </strong>
+
+                    <small>Administrator</small>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <span>↪</span>
+                Logout
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-area">
+
+        <header class="topbar">
+
+            <div>
+                <h1>
+                    {% block page_heading %}
+                    Employee Management
+                    {% endblock %}
+                </h1>
+
+                <p>
+                    {% block page_subheading %}
+                    Manage your organization
+                    {% endblock %}
+                </p>
+            </div>
+
+            <div class="topbar-user">
+                <div class="top-avatar">
+                    {{ session.get('user_name', 'A')[0]|upper }}
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for message in messages %}
+
+                        <div class="flash-message">
+                            <span>✓</span>
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- PAGE CONTENT -->
+        <section class="content-area">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+</html>

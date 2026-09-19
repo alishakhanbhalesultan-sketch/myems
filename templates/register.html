@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - AlixTech</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #111111;
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 460px;
+
+            padding: 25px;
+        }
+
+        /* Logo */
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+
+            margin: 0 auto 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f5c400;
+            color: #000000;
+
+            border-radius: 12px;
+
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .brand-name span {
+            color: #f5c400;
+        }
+
+        /* Card */
+
+        .auth-card {
+            background: #1c1c1c;
+
+            border: 1px solid #3d3d3d;
+
+            border-radius: 14px;
+
+            padding: 35px;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .auth-card h1 {
+            margin: 0 0 8px;
+
+            color: #ffffff;
+
+            font-size: 25px;
+        }
+
+        .auth-card .subtitle {
+            margin: 0 0 28px;
+
+            color: #999999;
+
+            font-size: 14px;
+        }
+
+        /* Flash messages */
+
+        .alert {
+            padding: 12px 14px;
+
+            margin-bottom: 18px;
+
+            border-radius: 8px;
+
+            background: #292929;
+
+            border: 1px solid #f5c400;
+
+            color: #ffffff;
+
+            font-size: 13px;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .required {
+            color: #f5c400;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 48px;
+
+            padding: 0 14px;
+
+            background: #222222;
+
+            color: #ffffff;
+
+            border: 1px solid #444444;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        .form-group input::placeholder {
+            color: #777777;
+        }
+
+        .form-group input:focus {
+            border-color: #f5c400;
+
+            box-shadow: 0 0 0 3px rgba(245, 196, 0, 0.10);
+        }
+
+        /* Button */
+
+        .register-btn {
+            width: 100%;
+            height: 50px;
+
+            margin-top: 5px;
+
+            background: #f5c400;
+            color: #000000;
+
+            border: none;
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .register-btn:hover {
+            background: #ffd21f;
+        }
+
+        /* Login link */
+
+        .bottom-text {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #999999;
+
+            font-size: 13px;
+        }
+
+        .bottom-text a {
+            color: #f5c400;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .bottom-text a:hover {
+            color: #ffd21f;
+        }
+
+        @media (max-width: 500px) {
+
+            .auth-container {
+                padding: 15px;
+            }
+
+            .auth-card {
+                padding: 25px 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="logo-area">
+
+        <div class="logo">
+            A
+        </div>
+
+        <div class="brand-name">
+            Alix<span>Tech</span>
+        </div>
+
+    </div>
+
+
+    <div class="auth-card">
+
+        <h1>
+            Create Account
+        </h1>
+
+        <p class="subtitle">
+            Register to access the AlixTech Employee Management System.
+        </p>
+
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            method="POST"
+            action="{{ url_for('register') }}"
+        >
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="confirm_password">
+                    Confirm Password
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="register-btn"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <div class="bottom-text">
+
+            Already have an account?
+
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
